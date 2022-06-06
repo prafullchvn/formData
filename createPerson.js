@@ -32,6 +32,11 @@ const formatHobbies = hobbies => {
   return hobbies.split(',');
 };
 
+const formatAddress = (address, presentAddress) => {
+  const line1 = presentAddress || '';
+  return line1 + ' ' + address;
+};
+
 const saveAsJSON = (fileName, data) => {
   fs.writeFileSync(
     fileName, JSON.stringify(data), 'utf8'
@@ -94,12 +99,14 @@ const main = () => {
   form.addInputField(
     'address',
     'Please enter address line 1:',
-    isNotEmpty
+    isNotEmpty,
+    formatAddress
   );
   form.addInputField(
     'address',
     'Please enter address line 2:',
-    isNotEmpty
+    isNotEmpty,
+    formatAddress
   );
 
   const handleInput = getInputHandler(form);
