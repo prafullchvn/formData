@@ -5,8 +5,8 @@ class Form {
     this.fieldIndex = 0;
   }
 
-  addInputField(name, label, validator, formatter = x => x) {
-    const field = { name, label, validator, formatter };
+  addInputField(name, label, parser, validator, formatter = x => x) {
+    const field = { name, label, parser, validator, formatter };
     this.fields.push(field);
   }
 
@@ -22,7 +22,7 @@ class Form {
   acceptInput(data) {
     const field = this.currentField()
     if (field.validator(data)) {
-      this.formData[field.name] = field.formatter(data);
+      field.parser(this.formData, field.name, data);
       this.nextQuestion();
       return true;
     }

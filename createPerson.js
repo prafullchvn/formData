@@ -17,8 +17,15 @@ const validateDob = (dobAsString) => {
   );
 };
 
-const validateHobbies = (hobbies) => {
-  return hobbies !== '';
+const isNotEmpty = (value) => {
+  return value !== '';
+};
+
+const validatePhoneNo = (phoneNo) => {
+  return (
+    isNumber(phoneNo) &&
+    phoneNo.length === 10
+  );
 };
 
 const formatHobbies = hobbies => {
@@ -33,7 +40,8 @@ const saveAsJSON = (fileName, data) => {
   process.exit();
 };
 
-const dataAccepter = (form) => {
+const getInputHandler = (form) => {
+  console.log(form.currentLabel());
   return (chunk) => {
     const isSaved = form.acceptInput(chunk.replace('\n', ''));
 
@@ -49,19 +57,60 @@ const dataAccepter = (form) => {
   };
 };
 
+const parseField = (formData, name, value) => {
+  return formData[name] = value;
+};
+
+const parseAddress = (formData, name, value) => {
+  let firstLine = formData[name] || '';
+  firstLine = firstLine || firstLine + ',';
+  return formData[name] = firstLine + value;
+};
+
 const main = () => {
   const form = new Form();
 
-  form.addInputField('name', 'Please enter your name:', validateName);
-  form.addInputField('dob', 'Please enter your dateOfBirth:', validateDob);
   form.addInputField(
-    'hobbies', 'Please enter hobbies:', validateHobbies, formatHobbies
+    'name',
+    'Please enter your name:',
+    parseField,
+    validateName
   );
-  console.log(form.currentLabel());
+  form.addInputField(
+    'dob',
+    'Please enter your dateOfBirth:',
+    parseField,
+    validateDob
+  );
+  form.addInputField(
+    'hobbies',
+    'Please enter hobbies:',
+    parseField,
+    isNotEmpty,
+    formatHobbies
+  );
+  form.addInputField(
+    'ph_no',
+    'Please enter phone number:',
+    parseField,
+    validatePhoneNo
+  );
+  form.addInputField(
+    'address',
+    'Please enter address line 1:',
+    parseAddress,
+    isNotEmpty
+  );
+  form.addInputField(
+    'address',
+    'Please enter address line 2:',
+    parseAddress,
+    isNotEmpty
+  );
 
-  const acceptData = dataAccepter(form);
+  const handleInput = getInputHandler(form);
   process.stdin.setEncoding('utf8');
-  process.stdin.on('data', acceptData);
+  process.stdin.on('data', handleInput);
 };
 
 main();
