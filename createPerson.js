@@ -25,6 +25,14 @@ const formatHobbies = hobbies => {
   return hobbies.split(',');
 };
 
+const saveAsJSON = (fileName, data) => {
+  fs.writeFileSync(
+    fileName, JSON.stringify(data), 'utf8'
+  );
+  console.log('Thank YOU');
+  process.exit();
+};
+
 const dataAccepter = (form) => {
   return (chunk) => {
     const isSaved = form.acceptInput(chunk.replace('\n', ''));
@@ -34,11 +42,7 @@ const dataAccepter = (form) => {
     }
 
     if (form.isFormFinished()) {
-      fs.writeFileSync(
-        'person.json', JSON.stringify(form.getFormData()), 'utf8'
-      );
-      console.log('Thank YOU');
-      process.exit();
+      saveAsJSON('person.json', form.getFormData());
     }
 
     console.log(form.currentLabel());
