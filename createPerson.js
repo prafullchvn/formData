@@ -1,55 +1,63 @@
 const fs = require('fs');
+const { Form } = require('./form.js');
 
-const person = (name, dob, hobbiesAsString) => {
-  const hobbies = hobbiesAsString.split(',');
+const validateName = (name) => {
+  return name.length > 4;
+};
 
-  return {
-    name,
-    dob,
-    hobbies
-  };
+const isNumber = value => {
+  return !isNaN(+value);
 }
 
-const getPrompt = (index) => {
-  const prompts = [
-    'Please enter your name:',
-    'Please enter your date of birth (yyyy-mm-dd):',
-    'Please enter your hobbies:'
-  ];
+const validateDob = (dobAsString) => {
+  const dob = dobAsString.split('-');
+  return (
+    dob.length === 3 &&
+    dob.every(partOfDob => isNumber(partOfDob))
+  );
+};
 
-  return prompts[index];
-}
+const validateHobbies = (hobbies) => {
+  return hobbies !== '';
+};
 
-const savePersonDetails = (details) => {
-  const personObj = person(...details);
-  fs.writeFileSync('person.json', JSON.stringify(personObj), 'utf8');
-  console.log('Thank you');
-  process.exit();
-}
+const formatHobbies = hobbies => {
+  return hobbies.split(',');
+};
 
-const dataCollector = () => {
-  let promptIndex = 1;
-  const formData = [];
-
+const dataAccepter = (form) => {
   return (chunk) => {
-    formData.push(chunk.replace('\n', ''));
+    const isSaved = form.acceptInput(chunk.replace('\n', ''));
 
-    if (formData.length === 3) {
-      savePersonDetails(formData);
+    if (!isSaved) {
+      console.log('You have entered invalid value.');
     }
 
-    process.stdout.write(getPrompt(promptIndex));
-    promptIndex++;
-  };
+    if (form.isFormFinished()) {
+      fs.writeFileSync(
+        'person.json', JSON.stringify(form.getFormData()), 'utf8'
+      );
+      console.log('Thank YOU');
+      process.exit();
+    }
 
+    console.log(form.currentLabel());
+  };
 };
 
 const main = () => {
-  const createPerson = dataCollector();
+  const form = new Form();
 
-  process.stdout.write(getPrompt(0));
+  form.addInputField('name', 'Please enter your name:', validateName);
+  form.addInputField('dob', 'Please enter your dateOfBirth:', validateDob);
+  form.addInputField(
+    'hobbies', 'Please enter hobbies:', validateHobbies, formatHobbies
+  );
+  console.log(form.currentLabel());
+
+  const acceptData = dataAccepter(form);
   process.stdin.setEncoding('utf8');
-  process.stdin.on('data', createPerson);
+  process.stdin.on('data', acceptData);
 };
 
 main();

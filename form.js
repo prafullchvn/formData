@@ -21,8 +21,9 @@ class Form {
 
   acceptInput(data) {
     const field = this.currentField()
-    if (this.validator(data)) {
+    if (field.validator(data)) {
       this.formData[field.name] = field.formatter(data);
+      this.nextQuestion();
       return true;
     }
     return false;
@@ -31,4 +32,18 @@ class Form {
   promptOfCurrentField() {
     return this.fields[this.fieldIndex].label;
   }
+
+  isFormFinished() {
+    return this.fieldIndex >= this.fields.length;
+  }
+
+  getFormData() {
+    return this.formData;
+  }
+
+  currentLabel() {
+    return this.currentField().label;
+  }
 }
+
+exports.Form = Form;
