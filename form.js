@@ -23,7 +23,9 @@ class Form {
     const field = this.currentField()
     if (field.validator(data)) {
       const existingValue = this.formData[field.name] || '';
-      this.formData[field.name] = existingValue + ' ' + data;
+      const value = existingValue + ' ' + data;
+
+      this.formData[field.name] = value.trim();
       this.nextQuestion();
       return true;
     }

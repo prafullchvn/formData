@@ -70,27 +70,27 @@ const parseAddress = (formData, name, value) => {
 const main = () => {
   const form = new Form();
 
-  // form.addInputField(
-  //   'name',
-  //   'Please enter your name:',
-  //   validateName
-  // );
-  // form.addInputField(
-  //   'dob',
-  //   'Please enter your dateOfBirth:',
-  //   validateDob
-  // );
-  // form.addInputField(
-  //   'hobbies',
-  //   'Please enter hobbies:',
-  //   isNotEmpty,
-  //   formatHobbies
-  // );
-  // form.addInputField(
-  //   'ph_no',
-  //   'Please enter phone number:',
-  //   validatePhoneNo
-  // );
+  form.addInputField(
+    'name',
+    'Please enter your name:',
+    validateName
+  );
+  form.addInputField(
+    'dob',
+    'Please enter your dateOfBirth:',
+    validateDob
+  );
+  form.addInputField(
+    'hobbies',
+    'Please enter hobbies:',
+    isNotEmpty,
+    formatHobbies
+  );
+  form.addInputField(
+    'ph_no',
+    'Please enter phone number:',
+    validatePhoneNo
+  );
   form.addInputField(
     'address',
     'Please enter address line 1:',
