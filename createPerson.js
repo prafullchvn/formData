@@ -20,30 +20,36 @@ const getPrompt = (index) => {
   return prompts[index];
 }
 
+const savePersonDetails = (details) => {
+  const personObj = person(...details);
+  fs.writeFileSync('person.json', JSON.stringify(personObj), 'utf8');
+  console.log('Thank you');
+  process.exit();
+}
+
 const dataCollector = () => {
   let promptIndex = 1;
   const formData = [];
+
   return (chunk) => {
     formData.push(chunk.replace('\n', ''));
-    console.log(getPrompt(promptIndex));
-    promptIndex++;
 
     if (formData.length === 3) {
-      const personObj = person(...formData);
-      fs.writeFileSync('person.json', JSON.stringify(personObj), 'utf8');
-      process.exit();
+      savePersonDetails(formData);
     }
+
+    process.stdout.write(getPrompt(promptIndex));
+    promptIndex++;
   };
+
 };
 
 const main = () => {
-  console.log(getPrompt(0));
+  const createPerson = dataCollector();
 
-  const getData = dataCollector();
-
+  process.stdout.write(getPrompt(0));
   process.stdin.setEncoding('utf8');
-  process.stdin.on('data', getData);
-  process.stdin.on('end', () => console.log('Thank You'));
+  process.stdin.on('data', createPerson);
 };
 
 main();
