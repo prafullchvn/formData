@@ -1,29 +1,32 @@
 class Form {
+  #fields;
+  #formData;
+  #fieldIndex;
   constructor() {
-    this.fields = [];
-    this.formData = {};
-    this.fieldIndex = 0;
+    this.#fields = [];
+    this.#formData = {};
+    this.#fieldIndex = 0;
   }
 
   addInputField(name, label, validator, formatter = x => x) {
     const field = { name, label, validator, formatter };
-    this.fields.push(field);
+    this.#fields.push(field);
   }
 
   currentField() {
-    return this.fields[this.fieldIndex];
+    return this.#fields[this.#fieldIndex];
   }
 
   nextQuestion() {
-    this.fieldIndex++;
-    return this.fields[this.fieldIndex];
+    this.#fieldIndex++;
+    return this.#fields[this.#fieldIndex];
   }
 
   acceptInput(data) {
     const field = this.currentField()
     if (field.validator(data)) {
-      const existingValue = this.formData[field.name];
-      this.formData[field.name] = field.formatter(data, existingValue);
+      const presentValue = this.#formData[field.name];
+      this.#formData[field.name] = field.formatter(data, presentValue);
       this.nextQuestion();
       return true;
     }
@@ -31,15 +34,15 @@ class Form {
   }
 
   promptOfCurrentField() {
-    return this.fields[this.fieldIndex].label;
+    return this.#fields[this.#fieldIndex].label;
   }
 
   isFormFinished() {
-    return this.fieldIndex >= this.fields.length;
+    return this.#fieldIndex >= this.#fields.length;
   }
 
   getFormData() {
-    return this.formData;
+    return this.#formData;
   }
 
   currentLabel() {

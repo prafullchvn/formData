@@ -34,13 +34,11 @@ const formatHobbies = hobbies => {
 
 const formatAddress = (address, presentAddress) => {
   const line1 = presentAddress || '';
-  return line1 + ' ' + address;
+  return (line1 + '\n' + address).trim();
 };
 
-const saveAsJSON = (fileName, data) => {
-  fs.writeFileSync(
-    fileName, JSON.stringify(data), 'utf8'
-  );
+const saveAsJson = (fileName, data) => {
+  fs.writeFileSync(fileName, JSON.stringify(data), 'utf8');
   console.log('Thank YOU');
   process.exit();
 };
@@ -48,28 +46,19 @@ const saveAsJSON = (fileName, data) => {
 const getInputHandler = (form) => {
   console.log(form.currentLabel());
   return (chunk) => {
-    const isSaved = form.acceptInput(chunk.replace('\n', ''));
+    const formattedChunk = chunk.replace('\n', '');
+    const saved = form.acceptInput(formattedChunk);
 
-    if (!isSaved) {
+    if (!saved) {
       console.log('You have entered invalid value.');
     }
 
     if (form.isFormFinished()) {
-      saveAsJSON('person.json', form.getFormData());
+      saveAsJson('person.json', form.getFormData());
     }
 
     console.log(form.currentLabel());
   };
-};
-
-const parseField = (formData, name, value) => {
-  return formData[name] = value;
-};
-
-const parseAddress = (formData, name, value) => {
-  let firstLine = formData[name] || '';
-  firstLine = firstLine || firstLine + ',';
-  return formData[name] = firstLine + value;
 };
 
 const main = () => {
@@ -80,22 +69,14 @@ const main = () => {
     'Please enter your name:',
     validateName
   );
-  form.addInputField(
-    'dob',
-    'Please enter your dateOfBirth:',
-    validateDob
-  );
+  form.addInputField('dob', 'Please enter your dateOfBirth:', validateDob);
   form.addInputField(
     'hobbies',
     'Please enter hobbies:',
     isNotEmpty,
     formatHobbies
   );
-  form.addInputField(
-    'ph_no',
-    'Please enter phone number:',
-    validatePhoneNo
-  );
+  form.addInputField('ph_no', 'Please enter phone number:', validatePhoneNo);
   form.addInputField(
     'address',
     'Please enter address line 1:',
