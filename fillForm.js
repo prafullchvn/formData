@@ -14,7 +14,9 @@ const main = () => {
 
   console.log(form.currentFieldPrompt());
   process.stdin.setEncoding('utf8');
-  process.stdin.on('data', (chunk) => handleResponse(form, chunk, saveAsJson, console.log));
+  process.stdin.on('data',
+    (chunk) => handleResponse(form, chunk, saveAsJson, console.log)
+  );
 };
 
 main();

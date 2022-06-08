@@ -26,7 +26,7 @@ class Field {
   }
 
   parse() {
-    return { name: this.#name, response: this.#response };
+    return { name: this.#name, response: this.#parser(this.#response) };
   }
 
   getPrompt() {

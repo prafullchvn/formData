@@ -16,7 +16,7 @@ describe('form', () => {
     const nameField = new Field('name', 'Enter name', () => true, x => x)
     const form = new Form(nameField);
 
-    assert.ok(form.acceptResponse('abc'));
+    form.acceptResponse('abc')
     assert.deepStrictEqual(
       form.getResponses(form, 'abc', x => x),
       { name: 'abc' }

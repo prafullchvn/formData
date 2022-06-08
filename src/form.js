@@ -15,17 +15,13 @@ class Form {
     return this.#fields[this.#fieldIndex];
   }
 
-  // #nextField() {
-  //   return this.#fields[this.#fieldIndex];
-  // }
-
   acceptResponse(response) {
     const field = this.#currentField()
-    if (field.isValid(response)) {
-      field.fill(response);
-      this.#fieldIndex++;
-      return true;
+    if (!field.isValid(response)) {
+      throw new Error('Invalid input.');
     }
+    field.fill(response);
+    this.#fieldIndex++;
     return false;
   }
 

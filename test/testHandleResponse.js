@@ -66,4 +66,18 @@ describe('handleResponse', () => {
 
     assert.deepStrictEqual(actualLog, expectedLog);
   });
+
+  it('Should give hobbies split by comma.', () => {
+    const isMoreThan4 = x => x.length > 4
+    const hobbiesField = new Field(
+      'hobbies', 'Enter hobbies', x => x, x => x.split(',')
+    );
+    const form = new Form(hobbiesField);
+
+    let actualResponses = null;
+    const callback = (_, x) => actualResponses = x;
+    handleResponse(form, 'running,walking', callback, identity);
+
+    assert.deepStrictEqual(actualResponses, { hobbies: ['running', 'walking'] });
+  });
 });

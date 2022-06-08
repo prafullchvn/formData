@@ -39,9 +39,9 @@ const formatAddress = (address, presentAddress) => {
 
 const handleResponse = (form, response, callback, logger) => {
   const formattedChunk = response.replace('\n', '');
-  const saved = form.acceptResponse(formattedChunk);
-
-  if (!saved) {
+  try {
+    form.acceptResponse(formattedChunk);
+  } catch (error) {
     logger('You have entered invalid value.');
   }
 
