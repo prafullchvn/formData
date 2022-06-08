@@ -1,3 +1,4 @@
+const { Field } = require('./field.js');
 
 const validateName = (name) => {
   return name.length > 4;
@@ -53,19 +54,27 @@ const handleResponse = (form, response, callback, logger) => {
 };
 
 const createForm = (form) => {
-  form.addInputField(
+  const nameField = new Field(
     'name',
     'Please enter your name:',
     validateName
   );
-  form.addInputField('dob', 'Please enter your dateOfBirth:', validateDob);
-  form.addInputField(
+  const dobField = new Field('dob', 'Please enter your dateOfBirth:', validateDob);
+  const hobbiesField = new Field(
     'hobbies',
     'Please enter hobbies:',
     isNotEmpty,
     formatHobbies
   );
-  form.addInputField('ph_no', 'Please enter phone number:', validatePhoneNo);
+  const phoneNoField = new Field(
+    'ph_no',
+    'Please enter phone number:',
+    validatePhoneNo
+  );
+  form.addField(nameField);
+  form.addField(dobField);
+  form.addField(hobbiesField);
+  form.addField(phoneNoField);
   // form.addInputField(
   //   'address',
   //   'Please enter address line 1:',

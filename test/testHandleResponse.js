@@ -1,13 +1,14 @@
 const assert = require('assert');
 const { handleResponse } = require('../src/formLib.js');
 const { Form } = require('../src/form');
+const { Field } = require('../src/field.js');
 
 const identity = x => x;
 
 describe('handleResponse', () => {
   it('Should return register response for one field.', () => {
-    const form = new Form();
-    form.addInputField('name', 'Enter name', () => true, x => x);
+    const nameField = new Field('name', 'Enter name', () => true, x => x)
+    const form = new Form(nameField);
 
     let actualResponses = null;
     const callback = (fileName, responses) => actualResponses = responses;
@@ -19,9 +20,9 @@ describe('handleResponse', () => {
   });
 
   it('Should return register response for more than one field.', () => {
-    const form = new Form();
-    form.addInputField('name', 'Enter name', () => true, x => x);
-    form.addInputField('dob', 'Enter dob', () => true, x => x);
+    const nameField = new Field('name', 'Enter name', () => true, x => x);
+    const dobField = new Field('dob', 'Enter dob', () => true, x => x);
+    const form = new Form(nameField, dobField);
 
     let actualResponses = null;
     const callback = (fileName, responses) => actualResponses = responses;
@@ -33,9 +34,9 @@ describe('handleResponse', () => {
   });
 
   it('Should print prompt for next field.', () => {
-    const form = new Form();
-    form.addInputField('name', 'Enter name', () => true, x => x);
-    form.addInputField('dob', 'Enter dob', () => true, x => x);
+    const nameField = new Field('name', 'Enter name', () => true, x => x);
+    const dobField = new Field('dob', 'Enter dob', () => true, x => x);
+    const form = new Form(nameField, dobField);
 
     const expectedLog = ['Enter dob'];
     const actualLog = [];
@@ -52,9 +53,10 @@ describe('handleResponse', () => {
   });
 
   it('Should print error message when name is invalid.', () => {
-    const form = new Form();
-    form.addInputField('name', 'Enter name', x => x.length > 4, x => x);
-    form.addInputField('dob', 'Enter dob', x => x.length > 4, x => x);
+    const isMoreThan4 = x => x.length > 4
+    const nameField = new Field('name', 'Enter name', isMoreThan4, identity);
+    const dobField = new Field('dob', 'Enter dob', x => x, identity);
+    const form = new Form(nameField, dobField);
 
     const expectedLog = ['You have entered invalid value.', 'Enter name'];
     const actualLog = [];

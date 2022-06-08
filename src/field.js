@@ -28,4 +28,10 @@ class Field {
   parse() {
     return { name: this.#name, response: this.#response };
   }
+
+  getPrompt() {
+    return this.#prompt;
+  }
 }
+
+module.exports = { Field };

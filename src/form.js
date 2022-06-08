@@ -2,14 +2,12 @@ class Form {
   #fields;
   #formData;
   #fieldIndex;
-  constructor() {
-    this.#fields = [];
-    this.#formData = {};
+  constructor(...fields) {
+    this.#fields = fields;
     this.#fieldIndex = 0;
   }
 
-  addInputField(name, label, validator, formatter = x => x) {
-    const field = { name, label, validator, formatter };
+  addField(field) {
     this.#fields.push(field);
   }
 
@@ -17,32 +15,35 @@ class Form {
     return this.#fields[this.#fieldIndex];
   }
 
-  #nextField() {
-    this.#fieldIndex++;
-    return this.#fields[this.#fieldIndex];
-  }
+  // #nextField() {
+  //   return this.#fields[this.#fieldIndex];
+  // }
 
-  acceptResponse(data) {
+  acceptResponse(response) {
     const field = this.#currentField()
-    if (field.validator(data)) {
-      const presentValue = this.#formData[field.name];
-      this.#formData[field.name] = field.formatter(data, presentValue);
-      this.#nextField();
+    if (field.isValid(response)) {
+      field.fill(response);
+      this.#fieldIndex++;
       return true;
     }
     return false;
   }
 
   isFormFinished() {
-    return this.#fieldIndex >= this.#fields.length;
+    return this.#fields.every(field => field.isFilled());
   }
 
   getResponses() {
-    return this.#formData;
+    const responses = {};
+    this.#fields.forEach(field => {
+      const { name, response } = field.parse();
+      responses[name] = response;
+    });
+    return responses;
   }
 
   currentFieldPrompt() {
-    return this.#currentField().label;
+    return this.#currentField().getPrompt();
   }
 }
 
