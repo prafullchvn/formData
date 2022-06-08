@@ -1,6 +1,5 @@
 class Form {
   #fields;
-  #formData;
   #fieldIndex;
   constructor(...fields) {
     this.#fields = fields;
@@ -15,13 +14,15 @@ class Form {
     return this.#fields[this.#fieldIndex];
   }
 
-  acceptResponse(response) {
-    const field = this.#currentField()
+  fillField(response) {
+    const field = this.#currentField();
     if (!field.isValid(response)) {
       throw new Error('Invalid input.');
     }
     field.fill(response);
-    this.#fieldIndex++;
+    if (field.isFilled()) {
+      this.#fieldIndex++;
+    }
     return false;
   }
 
@@ -40,6 +41,13 @@ class Form {
 
   currentFieldPrompt() {
     return this.#currentField().getPrompt();
+  }
+
+  equals(form) {
+    return (
+      this.#fields.length = form.#fields.length &&
+      this.#fields.every((field, index) => field.equals(form.#fields[index]))
+    );
   }
 }
 

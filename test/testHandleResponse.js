@@ -1,7 +1,8 @@
 const assert = require('assert');
-const { handleResponse } = require('../src/formLib.js');
+const { registerResponse } = require('../src/formLib.js');
 const { Form } = require('../src/form');
 const { Field } = require('../src/field.js');
+const { MultiValueField } = require('../src/multiValueField.js');
 
 const identity = x => x;
 
@@ -14,7 +15,7 @@ describe('handleResponse', () => {
     const callback = (fileName, responses) => actualResponses = responses;
 
     const response = 'abc';
-    handleResponse(form, response, callback, identity);
+    registerResponse(form, response, callback, identity);
 
     assert.deepStrictEqual(actualResponses, { name: 'abc' });
   });
@@ -27,8 +28,8 @@ describe('handleResponse', () => {
     let actualResponses = null;
     const callback = (fileName, responses) => actualResponses = responses;
 
-    handleResponse(form, 'abc', callback, identity);
-    handleResponse(form, '2001', callback, identity);
+    registerResponse(form, 'abc', callback, identity);
+    registerResponse(form, '2001', callback, identity);
 
     assert.deepStrictEqual(actualResponses, { name: 'abc', dob: '2001' });
   });
@@ -45,8 +46,8 @@ describe('handleResponse', () => {
     let actualResponses = null;
     const callback = (fileName, responses) => actualResponses = responses;
 
-    handleResponse(form, 'abc', callback, logger);
-    handleResponse(form, '2001', callback, logger);
+    registerResponse(form, 'abc', callback, logger);
+    registerResponse(form, '2001', callback, logger);
 
     assert.deepStrictEqual(actualResponses, { name: 'abc', dob: '2001' });
     assert.deepStrictEqual(actualLog, expectedLog);
@@ -62,7 +63,7 @@ describe('handleResponse', () => {
     const actualLog = [];
     const logger = (log) => actualLog.push(log);
 
-    handleResponse(form, 'ab', identity, logger);
+    registerResponse(form, 'ab', identity, logger);
 
     assert.deepStrictEqual(actualLog, expectedLog);
   });
@@ -76,8 +77,22 @@ describe('handleResponse', () => {
 
     let actualResponses = null;
     const callback = (_, x) => actualResponses = x;
-    handleResponse(form, 'running,walking', callback, identity);
+    registerResponse(form, 'running,walking', callback, identity);
 
     assert.deepStrictEqual(actualResponses, { hobbies: ['running', 'walking'] });
+  });
+
+  it('Should give two line of address separated by new line.', () => {
+    const hobbiesField = new MultiValueField(
+      'address', ['line1', 'line2'], () => true, x => x.join('\n')
+    );
+    const form = new Form(hobbiesField);
+
+    let actualResponses = null;
+    const callback = (_, x) => actualResponses = x;
+    registerResponse(form, 'line1', callback, identity);
+    registerResponse(form, 'line2', callback, identity);
+
+    assert.deepStrictEqual(actualResponses, { address: 'line1\nline2' });
   });
 });

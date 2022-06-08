@@ -1,5 +1,4 @@
 const fs = require('fs');
-const { Form } = require('./src/form.js');
 const { createForm, handleResponse } = require('./src/formLib.js');
 
 const saveAsJson = (fileName, data) => {
@@ -9,8 +8,7 @@ const saveAsJson = (fileName, data) => {
 };
 
 const main = () => {
-  const form = new Form();
-  createForm(form);
+  const form = createForm();
 
   console.log(form.currentFieldPrompt());
   process.stdin.setEncoding('utf8');

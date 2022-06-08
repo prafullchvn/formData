@@ -1,6 +1,8 @@
+const { Form } = require('./form.js');
 const { Field } = require('./field.js');
+const { MultiValueField } = require('./multiValueField.js');
 
-const validateName = (name) => {
+const isLengthMoreThan4 = (name) => {
   return name.length > 4;
 };
 
@@ -9,11 +11,7 @@ const isNumber = value => {
 }
 
 const validateDob = (dobAsString) => {
-  const dob = dobAsString.split('-');
-  return (
-    dob.length === 3 &&
-    dob.every(partOfDob => isNumber(partOfDob))
-  );
+  return /^\d{4}-\d{2}-\d{2}$/.test(dobAsString);
 };
 
 const isNotEmpty = (value) => {
@@ -31,20 +29,13 @@ const formatHobbies = hobbies => {
   return hobbies.split(',');
 };
 
-const formatAddress = (address, presentAddress) => {
-  const line1 = presentAddress || '';
-  return (line1 + '\n' + address).trim();
-};
-
-
-const handleResponse = (form, response, callback, logger) => {
+const registerResponse = (form, response, callback, logger) => {
   const formattedChunk = response.replace('\n', '');
   try {
-    form.acceptResponse(formattedChunk);
+    form.fillField(formattedChunk);
   } catch (error) {
     logger('You have entered invalid value.');
   }
-
   if (form.isFormFinished()) {
     callback('person.json', form.getResponses());
     return;
@@ -53,16 +44,18 @@ const handleResponse = (form, response, callback, logger) => {
   logger(form.currentFieldPrompt());
 };
 
-const createForm = (form) => {
+const createForm = () => {
+  const form = new Form();
+
   const nameField = new Field(
     'name',
     'Please enter your name:',
-    validateName
+    isLengthMoreThan4
   );
   const dobField = new Field('dob', 'Please enter your dateOfBirth:', validateDob);
   const hobbiesField = new Field(
     'hobbies',
-    'Please enter hobbies:',
+    'Please enter your hobbies:',
     isNotEmpty,
     formatHobbies
   );
@@ -71,16 +64,21 @@ const createForm = (form) => {
     'Please enter phone number:',
     validatePhoneNo
   );
+
+  const addressField = new MultiValueField(
+    'address',
+    ['Enter line 1 of address:', 'Enter line 2 of address:'],
+    isNotEmpty,
+    (hobbies) => hobbies.join('\n')
+  );
+
   form.addField(nameField);
   form.addField(dobField);
   form.addField(hobbiesField);
   form.addField(phoneNoField);
-  // form.addInputField(
-  //   'address',
-  //   'Please enter address line 1:',
-  //   isNotEmpty,
-  //   formatAddress
-  // );
+  form.addField(addressField);
+
+  return form;
 };
 
-module.exports = { createForm, handleResponse };
+module.exports = { createForm, registerResponse };

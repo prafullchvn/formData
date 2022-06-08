@@ -16,7 +16,7 @@ describe('form', () => {
     const nameField = new Field('name', 'Enter name', () => true, x => x)
     const form = new Form(nameField);
 
-    form.acceptResponse('abc')
+    form.fillField('abc')
     assert.deepStrictEqual(
       form.getResponses(form, 'abc', x => x),
       { name: 'abc' }
@@ -27,14 +27,14 @@ describe('form', () => {
     const nameField = new Field('name', 'Enter name', () => true, x => x)
     const form = new Form(nameField);
 
-    form.acceptResponse('abc');
+    form.fillField('abc');
     assert.ok(form.isFormFinished());
   });
 
   it('Should return submitted responses in form of object.', () => {
     const nameField = new Field('name', 'Enter name', () => true, x => x)
     const form = new Form(nameField);
-    form.acceptResponse('abc');
+    form.fillField('abc');
     assert.deepStrictEqual(form.getResponses(), { name: 'abc' });
   });
 });
