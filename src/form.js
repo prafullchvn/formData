@@ -13,40 +13,36 @@ class Form {
     this.#fields.push(field);
   }
 
-  currentField() {
+  #currentField() {
     return this.#fields[this.#fieldIndex];
   }
 
-  nextQuestion() {
+  #nextField() {
     this.#fieldIndex++;
     return this.#fields[this.#fieldIndex];
   }
 
-  acceptInput(data) {
-    const field = this.currentField()
+  acceptResponse(data) {
+    const field = this.#currentField()
     if (field.validator(data)) {
       const presentValue = this.#formData[field.name];
       this.#formData[field.name] = field.formatter(data, presentValue);
-      this.nextQuestion();
+      this.#nextField();
       return true;
     }
     return false;
-  }
-
-  promptOfCurrentField() {
-    return this.#fields[this.#fieldIndex].label;
   }
 
   isFormFinished() {
     return this.#fieldIndex >= this.#fields.length;
   }
 
-  getFormData() {
+  getResponses() {
     return this.#formData;
   }
 
-  currentLabel() {
-    return this.currentField().label;
+  currentFieldPrompt() {
+    return this.#currentField().label;
   }
 }
 
