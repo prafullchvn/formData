@@ -42,13 +42,6 @@ class Form {
   currentFieldPrompt() {
     return this.#currentField().getPrompt();
   }
-
-  equals(form) {
-    return (
-      this.#fields.length = form.#fields.length &&
-      this.#fields.every((field, index) => field.equals(form.#fields[index]))
-    );
-  }
 }
 
 exports.Form = Form;

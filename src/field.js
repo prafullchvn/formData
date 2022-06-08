@@ -18,7 +18,7 @@ class Field {
   }
 
   fill(response) {
-    return this.#response = response;
+    this.#response = response;
   }
 
   isValid(response) {
@@ -31,14 +31,6 @@ class Field {
 
   getPrompt() {
     return this.#prompt;
-  }
-
-  equals(field) {
-    return (
-      this.#name === field.#name &&
-      this.#prompt === field.#prompt &&
-      this.#response === field.#response
-    );
   }
 }
 
