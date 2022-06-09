@@ -1,0 +1,26 @@
+{
+  "name": "form",
+  "version": "1.0.0",
+  "description": "",
+  "main": "fillForm.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "start": "node fillForm.js",
+    "test": "mocha && bash ./test/testMain.sh "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prafullchvn/formData.git"
+  },
+  "author": "Prafull Chavan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/prafullchvn/formData/issues"
+  },
+  "homepage": "https://github.com/prafullchvn/formData#readme",
+  "devDependencies": {
+    "mocha": "^10.0.0"
+  }
+}

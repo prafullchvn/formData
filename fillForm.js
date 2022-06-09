@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { createForm, handleResponse } = require('./src/userDetailsForm.js');
+const { createForm, registerResponse } = require('./src/userDetailsForm.js');
 
 const saveAsJson = (fileName, data) => {
   fs.writeFileSync(fileName, JSON.stringify(data), 'utf8');
@@ -13,7 +13,12 @@ const main = () => {
   console.log(form.currentFieldPrompt());
   process.stdin.setEncoding('utf8');
   process.stdin.on('data',
-    (chunk) => handleResponse(form, chunk, saveAsJson, console.log)
+    (chunk) => {
+      const inputs = chunk.trim().split('\n');
+      inputs.forEach(
+        input => registerResponse(form, input, saveAsJson, console.log)
+      );
+    }
   );
 };
 

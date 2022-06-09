@@ -30,9 +30,8 @@ const formatHobbies = hobbies => {
 };
 
 const registerResponse = (form, response, callback, logger) => {
-  const formattedChunk = response.replace('\n', '');
   try {
-    form.fillField(formattedChunk);
+    form.fillField(response);
   } catch (error) {
     logger('You have entered invalid value.');
   }

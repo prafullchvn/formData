@@ -1,0 +1,10 @@
+{
+  "name": "Prafull",
+  "dob": "2001-05-31",
+  "hobbies": [
+    "running",
+    "walking"
+  ],
+  "ph_no": "1234567890",
+  "address": "line1 of addres\nline2 of addres"
+}
