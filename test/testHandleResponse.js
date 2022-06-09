@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { registerResponse } = require('../src/formLib.js');
+const { registerResponse } = require('../src/userDetailsForm.js');
 const { Form } = require('../src/form');
 const { Field } = require('../src/field.js');
 const { MultiValueField } = require('../src/multiValueField.js');

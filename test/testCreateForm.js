@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { createForm } = require('../src/formLib');
+const { createForm } = require('../src/userDetailsForm.js');
 
 describe('createForm', () => {
   it('Should check prompts of all given fields.', () => {
@@ -16,7 +16,5 @@ describe('createForm', () => {
     form.fillField('line1');
     assert.equal(form.currentFieldPrompt(), 'Enter line 2 of address:');
     form.fillField('line2');
-    // const nameField = new Field('name', 'enter name', () => true, x => x);
-    // const expectedForm = new Form(nameField);
   });
 });

@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { createForm, handleResponse } = require('./src/formLib.js');
+const { createForm, handleResponse } = require('./src/userDetailsForm.js');
 
 const saveAsJson = (fileName, data) => {
   fs.writeFileSync(fileName, JSON.stringify(data), 'utf8');
